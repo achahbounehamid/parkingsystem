@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.constants.Fare;
+import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
@@ -10,16 +11,23 @@ public class FareCalculatorService {
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
         }
 
-        // Calculate the duration in hours (including fractions)
+        // Calculer la durée en heures
         long inTimeMillis = ticket.getInTime().getTime();
         long outTimeMillis = ticket.getOutTime().getTime();
-        double durationInHours = (double) (outTimeMillis - inTimeMillis) / (1000 * 60 * 60); // Convert milliseconds to hours
+
+        double durationInHours = (double) (outTimeMillis - inTimeMillis) / (1000 * 60 * 60); // Convertir millisecondes en heures
+
+        // Vérifier si la durée est inférieure ou égale à 30 minutes (0.5 heure)
+        if (durationInHours <= 0.5) {
+            ticket.setPrice(0.0);  // Gratuit si la durée est <= 30 minutes
+            return;
+        }
 
         if (durationInHours <= 0) {
             throw new IllegalArgumentException("Parking duration must be greater than zero.");
         }
 
-        // Set the fare based on the vehicle type
+        // Définir le tarif en fonction du type de véhicule
         switch (ticket.getParkingSpot().getParkingType()) {
             case CAR: {
                 ticket.setPrice(durationInHours * Fare.CAR_RATE_PER_HOUR);

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class FareCalculatorServiceTest {
@@ -31,7 +32,7 @@ public class FareCalculatorServiceTest {
     @Test
     public void calculateFareCar(){
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - 3600000L );// hour parking time
+        inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );// heure de stationnement
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
 
@@ -39,13 +40,13 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals(1.5, ticket.getPrice());//Verify price for 1 hour parking
+        assertEquals(1.5, ticket.getPrice());//Vérifiez le prix pour 1 heure de stationnement
     }
 
     @Test
     public void calculateFareBike(){
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - 3600000L );
+        inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
 
@@ -59,7 +60,7 @@ public class FareCalculatorServiceTest {
     @Test
     public void calculateFareUnkownType(){
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - 3600000L );
+        inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, null,false);
 
@@ -85,7 +86,7 @@ public class FareCalculatorServiceTest {
     @Test
     public void calculateFareBikeWithLessThanOneHourParkingTime(){
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - 2700000L );//45 minutes parking time should give 3/4th parking fare
+        inTime.setTime( System.currentTimeMillis() - (  45 * 60 * 1000) );//45 minutes de stationnement
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
 
@@ -93,13 +94,13 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals(0.75, ticket.getPrice());// verify price for 45 minutes parking
+        assertEquals(0.75, ticket.getPrice());// vérifier le prix pour 45 minutes de stationnement
     }
 
     @Test
     public void calculateFareCarWithLessThanOneHourParkingTime(){
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - 2700000L);//45 minutes parking time should give 3/4th parking fare
+        inTime.setTime( System.currentTimeMillis() - (  45 * 60 * 1000));//45 minutes de stationnement
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
 
@@ -107,13 +108,13 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals( 1.125, ticket.getPrice());// verify price for 45 minutes parking
+        assertEquals( 1.125, ticket.getPrice());// vérifier le prix pour 45 minutes de stationnement
     }
 
     @Test
     public void calculateFareCarWithMoreThanADayParkingTime(){
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - 86400000L);//24 hours parking time should give 24 * parking fare per hour
+        inTime.setTime( System.currentTimeMillis() - (  24 * 60 * 60 * 1000));//Une durée de stationnement de 24 heures devrait donner 24 * tarif de stationnement par heure
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
 
@@ -121,7 +122,44 @@ public class FareCalculatorServiceTest {
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-        assertEquals( 36.0, ticket.getPrice());// verify price for 24 minutes parking
+        assertEquals( 36.0, ticket.getPrice());// vérifier le prix pour 24 minutes de stationnement
+    }
+    @Test
+    public void calculateFareCarWithLessThan30minutesParkingTime() {
+        // Arrange : création d'un ticket pour une voiture stationnée 25 minutes
+        Date inTime = new Date(System.currentTimeMillis() - (25* 60 * 1000)); // Entrée il y a 25 minutes
+        Date outTime = new Date(); // Sortie maintenant
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+System.out.println(inTime);
+        System.out.println(outTime);
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+
+        // Act : appel de la méthode calculateFare
+        fareCalculatorService.calculateFare(ticket);
+
+        // Assert : vérification que le prix est 0
+        assertEquals(0, ticket.getPrice(), "Le stationnement de moins de 30 minutes doit être gratuit pour une voiture.");
+    }
+
+
+    @Test
+    public void calculateFareBikeWithLessThan30minutesParkingTime() {
+        // Arrange : création d'un ticket pour une moto stationnée 20 minutes
+        Date inTime = new Date(System.currentTimeMillis() - (20  * 60 * 1000)); // Entrée il y a 20 minutes
+        Date outTime = new Date(); // Sortie maintenant
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+
+        // Act : appel de la méthode calculateFare
+        fareCalculatorService.calculateFare(ticket);
+
+        // Assert : vérification que le prix est 0
+        assertEquals(0, ticket.getPrice(), "Le stationnement de moins de 30 minutes doit être gratuit pour une moto.");
     }
 
 }
