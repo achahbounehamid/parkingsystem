@@ -161,5 +161,50 @@ System.out.println(inTime);
         // Assert : vérification que le prix est 0
         assertEquals(0, ticket.getPrice(), "Le stationnement de moins de 30 minutes doit être gratuit pour une moto.");
     }
+    @Test
+    public void calculateFareCarWithDiscount() {
+        // Arrange : création d'un ticket pour une voiture stationnée 2 heures avec remise
+        String vehicleRegNumber = "AB-123-CD";
+        Date inTime = new Date(System.currentTimeMillis() - (2 * 60 * 60 * 1000)); // Entrée il y a 2 heures
+        Date outTime = new Date(); // Sortie maintenant
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setVehicleRegNumber(vehicleRegNumber);
+
+        // Act : appel de la méthode calculateFare avec remise
+        fareCalculatorService.calculateFare(ticket, true);
+
+        // Appliquer la remise de 5%
+        double expectedPrice = (2 * Fare.CAR_RATE_PER_HOUR) * 0.95; // Tarif avec remise
+
+        // Assert : vérification que le prix est correct avec la remise de 5%
+        assertEquals(expectedPrice, ticket.getPrice(), "Le prix doit être de 2.85€ avec une remise de 5% pour 2 heures de stationnement.");
+    }
+
+    @Test
+    public void calculateFareBikeWithDiscount() {
+        // Arrange : création d'un ticket pour une moto stationnée 1 heure avec remise
+        String vehicleRegNumber = "AB-456-EF";
+        Date inTime = new Date(System.currentTimeMillis() - (1 * 60 * 60 * 1000)); // Entrée il y a 1 heure
+        Date outTime = new Date(); // Sortie maintenant
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setVehicleRegNumber(vehicleRegNumber);
+
+        // Act : appel de la méthode calculateFare avec remise
+        fareCalculatorService.calculateFare(ticket, true); // Passer true pour appliquer la remise
+
+        // Appliquer la remise de 5%
+        double expectedPrice = (1 * Fare.BIKE_RATE_PER_HOUR) * 0.95; // Tarif avec remise
+
+        // Assert : vérification que le prix est correct avec la remise de 5%
+        assertEquals(expectedPrice, ticket.getPrice(), "Le prix doit être de 0.95€ avec une remise de 5% pour 1 heure de stationnement.");
+    }
 
 }

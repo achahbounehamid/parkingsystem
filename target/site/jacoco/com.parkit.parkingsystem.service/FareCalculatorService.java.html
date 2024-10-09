@@ -6,12 +6,12 @@ import com.parkit.parkingsystem.model.Ticket;
 
 <span class="fc" id="L7">public class FareCalculatorService {</span>
 
-    public void calculateFare(Ticket ticket) {
+    public void calculateFare(Ticket ticket, boolean discount) {
 <span class="pc bpc" id="L10" title="1 of 4 branches missed.">        if (ticket.getOutTime() == null || ticket.getOutTime().before(ticket.getInTime())) {</span>
 <span class="fc" id="L11">            throw new IllegalArgumentException(&quot;Out time provided is incorrect:&quot; + ticket.getOutTime().toString());</span>
         }
 
-        // Calculer la durée en heures (incluant les fractions)
+        // Calculer la durée en heures
 <span class="fc" id="L15">        long inTimeMillis = ticket.getInTime().getTime();</span>
 <span class="fc" id="L16">        long outTimeMillis = ticket.getOutTime().getTime();</span>
 
@@ -41,6 +41,15 @@ import com.parkit.parkingsystem.model.Ticket;
 <span class="nc" id="L41">                throw new IllegalArgumentException(&quot;Unknown Parking Type&quot;);</span>
             }
         }
-<span class="fc" id="L44">    }</span>
+        // Appliquer une remise de 5% si le paramètre discount est vrai
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (discount) {</span>
+<span class="fc" id="L46">            ticket.setPrice(ticket.getPrice() * 0.95);</span>
+        }
+<span class="fc" id="L48">    }</span>
+    // Méthode surchargée pour calculer le tarif sans réduction
+    public void calculateFare(Ticket ticket) {
+<span class="fc" id="L51">        calculateFare(ticket, false);</span>
+<span class="fc" id="L52">    }</span>
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
