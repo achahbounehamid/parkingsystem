@@ -1,5 +1,4 @@
 package com.parkit.parkingsystem;
-
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
@@ -13,12 +12,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
-
 import static org.mockito.Mockito.*;
+
+
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingServiceTest {

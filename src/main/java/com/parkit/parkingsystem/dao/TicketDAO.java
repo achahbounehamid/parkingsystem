@@ -86,4 +86,37 @@ public class TicketDAO {
         }
         return false;
     }
+    /**
+     * Méthode pour compter combien de tickets sont enregistrés pour un véhicule.
+     *
+     * @param vehicleRegNumber numéro d'immatriculation du véhicule
+     * @return le nombre de tickets associés au véhicule
+     */
+    public int getNbTicket(String vehicleRegNumber) {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int nbTickets = 0;
+
+        try {
+            con = dataBaseConfig.getConnection();
+            String query = "SELECT COUNT(*) FROM ticket WHERE VEHICLE_REG_NUMBER = ?";
+            ps = con.prepareStatement(query);
+            ps.setString(1, vehicleRegNumber);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                nbTickets = rs.getInt(1); // Récupérer le nombre de tickets
+            }
+        } catch (Exception ex) {
+            logger.error("Erreur lors de la récupération du nombre de tickets pour le véhicule : " + vehicleRegNumber, ex);
+        } finally {
+            dataBaseConfig.closeResultSet(rs);
+            dataBaseConfig.closePreparedStatement(ps);
+            dataBaseConfig.closeConnection(con);
+        }
+
+        return nbTickets;
+    }
+
 }
