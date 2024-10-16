@@ -1,8 +1,12 @@
 -------------------------------------------------------------------------------
 Test set: com.parkit.parkingsystem.integration.service.TicketDAOTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 42.405 s <<< FAILURE! - in com.parkit.parkingsystem.integration.service.TicketDAOTest
-testGetNbTicketWithExistingVehicle  Time elapsed: 20.484 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: Le nombre de tickets pour ce véhicule doit être 3. ==> expected: <3> but was: <0>
-	at com.parkit.parkingsystem.integration.service.TicketDAOTest.testGetNbTicketWithExistingVehicle(TicketDAOTest.java:42)
+Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 2.605 s <<< FAILURE! - in com.parkit.parkingsystem.integration.service.TicketDAOTest
+testGetNbTicketWithNoTickets  Time elapsed: 1.262 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Le ticket doit être inséré avec succès dans la base de données. ==> expected: <true> but was: <false>
+	at com.parkit.parkingsystem.integration.service.TicketDAOTest.setUp(TicketDAOTest.java:33)
+
+testGetNbTicketWithExistingVehicle  Time elapsed: 0.183 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Le ticket doit être inséré avec succès dans la base de données. ==> expected: <true> but was: <false>
+	at com.parkit.parkingsystem.integration.service.TicketDAOTest.setUp(TicketDAOTest.java:33)
 

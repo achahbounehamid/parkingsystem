@@ -28,9 +28,9 @@ public class TicketDAOTest {
             ticket.setVehicleRegNumber(vehicleRegNumber);
             ticket.setPrice(0.0);
             ticket.setInTime(new Date(System.currentTimeMillis() - (i * 60 * 60 * 1000))); // Différentes heures pour simuler plusieurs entrées
-            ticket.setParkingSpot(new ParkingSpot(1, ParkingType.CAR, false));
+            ticket.setParkingSpot(new ParkingSpot(1, ParkingType.CAR, true));
             boolean result = ticketDAO.saveTicket(ticket);
-            assertTrue(result, "Le ticket doit être inséré avec succès dans la base de données.");
+             assertTrue(result, "Le ticket doit être inséré avec succès dans la base de données.");
         }
     }
 

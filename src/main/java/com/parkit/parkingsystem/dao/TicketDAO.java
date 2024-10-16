@@ -25,13 +25,24 @@ public class TicketDAO {
             con = dataBaseConfig.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
             //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-            //ps.setInt(1,ticket.getId());
+            logger.info("Inserting ticket with PARKING_NUMBER: {}, VEHICLE_REG_NUMBER: {}, PRICE: {}, IN_TIME: {}, OUT_TIME: {}");
+            ps.setInt(1,ticket.getId());
             ps.setInt(1,ticket.getParkingSpot().getId());
             ps.setString(2, ticket.getVehicleRegNumber());
             ps.setDouble(3, ticket.getPrice());
             ps.setTimestamp(4, new Timestamp(ticket.getInTime().getTime()));
             ps.setTimestamp(5, (ticket.getOutTime() == null)?null: (new Timestamp(ticket.getOutTime().getTime())) );
-            return ps.execute();
+//            return ps.execute();
+            int rowsAffected = ps.executeUpdate();  // Use executeUpdate() to get the number of rows affected
+
+            if (rowsAffected > 0) {
+                logger.info("Ticket inserted successfully");
+                return true;
+            } else {
+                logger.error("Failed to insert ticket: No rows affected");
+                return false;
+            }
+
         }catch (Exception ex){
             logger.error("Error fetching next available slot",ex);
         }finally {
