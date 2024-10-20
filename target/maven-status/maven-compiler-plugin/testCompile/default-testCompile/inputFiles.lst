@@ -2,5 +2,8 @@ C:\wamp64\www\openclassrooms\parkingsystem\src\test\java\com\parkit\parkingsyste
 C:\wamp64\www\openclassrooms\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\config\DataBaseTestConfig.java
 C:\wamp64\www\openclassrooms\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\ParkingDataBaseIT.java
 C:\wamp64\www\openclassrooms\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\service\DataBasePrepareService.java
+C:\wamp64\www\openclassrooms\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\service\InteractiveShellTest.java
+C:\wamp64\www\openclassrooms\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\service\ParkingDaoTest.java
 C:\wamp64\www\openclassrooms\parkingsystem\src\test\java\com\parkit\parkingsystem\integration\service\TicketDAOTest.java
 C:\wamp64\www\openclassrooms\parkingsystem\src\test\java\com\parkit\parkingsystem\ParkingServiceTest.java
+C:\wamp64\www\openclassrooms\parkingsystem\src\test\java\util\InputReaderUtilTest.java

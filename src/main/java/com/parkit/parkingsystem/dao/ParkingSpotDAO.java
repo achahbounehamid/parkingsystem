@@ -4,12 +4,11 @@ import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.model.Ticket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 public class ParkingSpotDAO {
     private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
@@ -22,7 +21,7 @@ public class ParkingSpotDAO {
         try {
             con = dataBaseConfig.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT);
-            ps.setString(1, parkingType.toString());
+            ps.setString(1, parkingType.name());
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 result = rs.getInt(1);;
@@ -36,6 +35,7 @@ public class ParkingSpotDAO {
         }
         return result;
     }
+
 
     public boolean updateParking(ParkingSpot parkingSpot){
         //update the availability fo that parking slot
@@ -55,5 +55,30 @@ public class ParkingSpotDAO {
             dataBaseConfig.closeConnection(con);
         }
     }
+
+    public boolean saveParking(ParkingSpot parkingSpot){
+        Connection con = null;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_PARKING);
+            ps.setString(1, parkingSpot.getParkingType().name());
+            ps.setBoolean(2, parkingSpot.isAvailable());
+
+            int rowsAffected = ps.executeUpdate();  // Use executeUpdate() to get the number of rows affected
+
+            if (rowsAffected > 0) {
+                logger.info("Ticket inserted successfully");
+                return true;
+            } else {
+                logger.error("Failed to insert ticket: No rows affected");
+                return false;
+            }
+
+        } catch (SQLException | ClassNotFoundException ex) {
+            logger.error("Error saving ticket info", ex);
+            return false;
+        }
+    }
+
 
 }

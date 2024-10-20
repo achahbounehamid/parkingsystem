@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.parkit.parkingsystem.integration.service.InteractiveShellTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.937 s <<< FAILURE! - in com.parkit.parkingsystem.integration.service.InteractiveShellTest
+interactiveShellTest  Time elapsed: 1.906 s  <<< ERROR!
+java.lang.NullPointerException
+	at com.parkit.parkingsystem.integration.service.InteractiveShellTest.interactiveShellTest(InteractiveShellTest.java:74)
+
