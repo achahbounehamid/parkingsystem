@@ -19,7 +19,9 @@ public class ParkingSpotDAO {
         Connection con = null;
         int result=-1;
         try {
+            System.out.println("Connecting to database...");
             con = dataBaseConfig.getConnection();
+            System.out.println("Connection successful!");
             PreparedStatement ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT);
             ps.setString(1, parkingType.name());
             ResultSet rs = ps.executeQuery();
@@ -78,6 +80,30 @@ public class ParkingSpotDAO {
             logger.error("Error saving ticket info", ex);
             return false;
         }
+    }
+
+
+    public ParkingSpot getParkingSpot(int parkingSpotId) {
+        Connection con = null;
+        ParkingSpot parkingSpot = null;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM parking WHERE ID = ?");
+            ps.setInt(1, parkingSpotId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                ParkingType parkingType = ParkingType.valueOf(rs.getString("PARKING_TYPE"));
+                boolean isAvailable = rs.getBoolean("AVAILABLE");
+                parkingSpot = new ParkingSpot(parkingSpotId, parkingType, isAvailable);
+            }
+            dataBaseConfig.closeResultSet(rs);
+            dataBaseConfig.closePreparedStatement(ps);
+        } catch (Exception ex) {
+            logger.error("Error fetching parking spot", ex);
+        } finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return parkingSpot;
     }
 
 

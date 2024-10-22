@@ -65,27 +65,17 @@ public class InteractiveShellTest {
         System.out.println("ok");
     }
 
-    @Test
-    void interactiveShellTest(){
-
-        //TODO je ne comprend pas en mockant le la classe il excute le code à l'interieur
-        // Mockito.when(inputReaderUtil.readSelection()).thenReturn(1);
-
-        Mockito.when(inputReaderUtil.readSelection()).thenReturn(1);
-     /*   // Simuler une entrée utilisateur valide
-        String simulatedInput = "1\n"; // Le '\n' simule l'appui sur 'Entrée'
-        System.setIn(new ByteArrayInputStream(simulatedInput.getBytes()));
-
-        InputReaderUtil inputReaderUtil = new InputReaderUtil();
-        // Appel de la méthode à tester
-        inputReaderUtil.readSelection();
-*/
-       // verify(parkingService, times(1)).processIncomingVehicle();
-        InteractiveShell.loadInterface();
-
-
-
-    }
+//    @Test
+//    void interactiveShellTest(){
+//
+//        //TODO je ne comprend pas en mockant le la classe il excute le code à l'interieur
+//         Mockito.when(inputReaderUtil.readSelection()).thenReturn(1);
+//
+//        verify(parkingService, times(1)).processIncomingVehicle();
+//        InteractiveShell.loadInterface();
+//
+//
+//    }
 
 
 

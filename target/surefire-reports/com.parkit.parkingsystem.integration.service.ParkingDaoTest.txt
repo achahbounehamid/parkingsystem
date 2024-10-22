@@ -1,4 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: com.parkit.parkingsystem.integration.service.ParkingDaoTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.203 s - in com.parkit.parkingsystem.integration.service.ParkingDaoTest
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.204 s <<< FAILURE! - in com.parkit.parkingsystem.integration.service.ParkingDaoTest
+shouldNextAvaibleSlot  Time elapsed: 1.196 s  <<< ERROR!
+junit.framework.AssertionFailedError: expected:<2> but was:<1>
+	at com.parkit.parkingsystem.integration.service.ParkingDaoTest.shouldNextAvaibleSlot(ParkingDaoTest.java:27)
+

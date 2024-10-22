@@ -14,7 +14,10 @@ public class ParkingDaoTest {
     @BeforeEach
     void setUp(){
         parkingSpotDAO = new ParkingSpotDAO();
+
     }
+
+
 
 
     @Test

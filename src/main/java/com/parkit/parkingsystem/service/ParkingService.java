@@ -41,7 +41,6 @@ public class ParkingService {
                 parkingSpot.setAvailable(false);
                 parkingSpotDAO.updateParking(parkingSpot);//attribuer cet espace de parking et le marquer comme non disponible
 
-
                 Date inTime = new Date();
                 Ticket ticket = new Ticket();
                 //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
@@ -72,6 +71,13 @@ public class ParkingService {
         ParkingSpot parkingSpot = null;
         try{
             ParkingType parkingType = getVehichleType();
+
+            // Vérifier si le type de véhicule est invalide
+            if (parkingType == null) {
+                System.out.println("Invalid vehicle type provided");
+                return null;  // Renvoie null si le type de véhicule est incorrect
+            }
+            // Récupérer le prochain numéro de place disponible
             parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
             if(parkingNumber > 0){
                 parkingSpot = new ParkingSpot(parkingNumber,parkingType, true);
@@ -82,7 +88,7 @@ public class ParkingService {
         return parkingSpot;
     }
 
-    private ParkingType getVehichleType(){
+    private ParkingType getVehichleType() throws IllegalArgumentException{
         System.out.println("Please select vehicle type from menu");
         System.out.println("1 CAR");
         System.out.println("2 BIKE");
@@ -95,8 +101,7 @@ public class ParkingService {
                 return ParkingType.BIKE;
             }
             default: {
-                System.out.println("Incorrect input provided");
-                throw new IllegalArgumentException("Entered input is invalid");
+                return null;
             }
         }
     }

@@ -21,6 +21,7 @@ import java.util.Date;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.Method;
 
 
 
@@ -143,16 +144,49 @@ public void testProcessIncomingVehicle() throws Exception {
         assertTrue(parkingSpot.isAvailable());
     }
 
-
     @Test
-    void throwParkingNumberIfAvailableTest_noAvailableSlots() {
-         assertThrows(Exception.class, () -> parkingService.getNextParkingNumberIfAvailable());
+    void processExitingVehicleTestUnableUpdate() throws Exception {
+        // Créer un ticket complet avec un ParkingSpot
+        Ticket ticket = new Ticket();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+        ticket.setParkingSpot(parkingSpot);
+        ticket.setVehicleRegNumber("ABC123");
+        ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000))); // il y a 1 heure
 
+        // Simuler les appels nécessaires
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABC123");
+        when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
+
+        // Simuler le cas où updateTicket() renvoie false
+        when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
+
+        // Appeler la méthode à tester
+        parkingService.processExitingVehicle();
+
+        // Vérifier que updateTicket() a bien été appelé
+        verify(ticketDAO, times(1)).updateTicket(any(Ticket.class));
     }
 
+@Test
+    void testGetNextParkingNumberIfAvailable() throws Exception{
+    //Simuler le type de véhicule (ici, une voiture)
+    when(inputReaderUtil.readSelection()).thenReturn(1);
+//Simuler que la méthode parkingSpotDAO.getNextAvailableSlot() renvoie 1, ce qui correspond à l'emplacement de parking disponible avec l'ID 1.
+    when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
 
+// Appel de la méthode à tester
+    ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
+    // Vérifications des résultats
+    assertNotNull(parkingSpot); // Vérifier que le ParkingSpot n'est pas null
+    assertEquals(1, parkingSpot.getId()); // Vérifier que l'ID est bien 1
+    assertEquals(ParkingType.CAR, parkingSpot.getParkingType()); // Vérifier le type de parking (voiture)
+    assertTrue(parkingSpot.isAvailable()); // Vérifier que l'emplacement est disponible
 
-
+}
+    @Test
+    void testGetNextParkingNumberIfAvailableParkingNumberNotFound() throws Exception {
+        assertNull(parkingService.getNextParkingNumberIfAvailable());
+    }
 
 
 }
