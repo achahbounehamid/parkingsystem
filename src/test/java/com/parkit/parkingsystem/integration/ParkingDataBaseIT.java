@@ -1,4 +1,5 @@
 
+import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
@@ -6,6 +7,7 @@ import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.ParkingService;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.parkit.parkingsystem.constants.ParkingType;
 
+
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNull;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -25,10 +28,12 @@ import static org.mockito.Mockito.*;
 
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
+    private static final double DISCOUNT_RATE = 0.95;
 
     private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
     private static ParkingSpotDAO parkingSpotDAO;
@@ -104,5 +109,33 @@ public void testParkingACar() throws Exception {
         assertNotNull(parkingSpot);
         assertTrue(parkingSpot.isAvailable()); //disponible après la sortie du véhicule");
     }
+    @Test
+    public void testParkingLotExitRecurringUser() throws Exception {
+        // Crée un ticket pour simuler un utilisateur récurrent
+        Ticket recurringTicket = new Ticket();
+        recurringTicket.setVehicleRegNumber(vehicleRegNumber);
+        recurringTicket.setInTime(new Date());
+        recurringTicket.setOutTime(null);
+        recurringTicket.setPrice(0.0);
+        ticketDAO.saveTicket(recurringTicket);
+
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
+        // Entrée du véhicule
+        parkingService.processIncomingVehicle();
+
+        // Sortie du véhicule avec remise
+        parkingService.processExitingVehicle();
+
+        // Pause pour permettre la synchronisation avec la base de données
+        Thread.sleep(200);
+
+        // Vérifier que la place de parking est à nouveau disponible
+        ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
+        assertNotNull(parkingSpot);
+        assertTrue(parkingSpot.isAvailable()); // La place devrait être disponible
+    }
+
+
 
 }

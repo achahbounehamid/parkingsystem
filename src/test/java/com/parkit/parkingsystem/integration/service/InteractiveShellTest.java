@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class InteractiveShellTest {
 
-
+//@Mock
    private InputReaderUtil inputReaderUtil;
     @Mock
    private ParkingSpotDAO parkingSpotDAO;
@@ -66,18 +66,16 @@ public class InteractiveShellTest {
     }
 
 //    @Test
-//    void interactiveShellTest(){
+//    void interactiveShellTest() {
+//        // Simuler la sélection
+//        Mockito.when(inputReaderUtil.readSelection()).thenReturn(1);
 //
-//        //TODO je ne comprend pas en mockant le la classe il excute le code à l'interieur
-//         Mockito.when(inputReaderUtil.readSelection()).thenReturn(1);
-//
-//        verify(parkingService, times(1)).processIncomingVehicle();
+//        // Appeler la méthode qui devrait utiliser le mock
 //        InteractiveShell.loadInterface();
 //
-//
+//        // Vérifier que la méthode a été appelée
+//        verify(parkingService, times(1)).processIncomingVehicle();
 //    }
-
-
 
 
 }

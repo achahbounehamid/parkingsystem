@@ -120,9 +120,12 @@ public class ParkingService {
             fareCalculatorService.calculateFare(ticket, discount);
 
             if(ticketDAO.updateTicket(ticket)) {
+                System.out.println("Ticket mis à jour avec succès dans la base de données.");
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
                 parkingSpotDAO.updateParking(parkingSpot);
+                System.out.println("Place de parking mise à jour comme disponible pour l'ID de place: " + parkingSpot.getId());
+                System.out.println("Disponibilité de la place: " + parkingSpot.isAvailable());
                 System.out.println("Please pay the parking fare:" + ticket.getPrice());
                 System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
             }else{

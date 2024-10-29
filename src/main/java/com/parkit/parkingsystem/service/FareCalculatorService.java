@@ -16,56 +16,55 @@ public class FareCalculatorService {
      * @param discount si vrai, une remise de 5% est appliquée
      */
     public void calculateFare(Ticket ticket, boolean discount) {
-        // Vérification que l'heure de sortie est valide
-        if (ticket.getOutTime() == null || ticket.getOutTime().before(ticket.getInTime())) {
-            throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
+        // Vérification des informations du ticket
+        if (ticket == null || ticket.getParkingSpot() == null || ticket.getParkingSpot().getParkingType() == null) {
+            throw new IllegalArgumentException("Ticket or Parking Type information is missing");
+        }else if (ticket.getParkingSpot().getParkingType() == null) {
+            throw new NullPointerException("Parking Type is missing");
         }
 
-        // Calcul de la durée de stationnement en millisecondes, puis conversion en heures
+        // Vérification que l'heure de sortie est valide
+        if (ticket.getOutTime() == null || ticket.getOutTime().before(ticket.getInTime())) {
+            throw new IllegalArgumentException("Out time provided is incorrect: " + ticket.getOutTime());
+        }
+
+        // Calcul de la durée de stationnement en heures
         long inTimeMillis = ticket.getInTime().getTime();
         long outTimeMillis = ticket.getOutTime().getTime();
-
         double durationInHours = (double) (outTimeMillis - inTimeMillis) / (1000 * 60 * 60);
 
         // Arrondir la durée à 4 décimales pour éviter les petites différences
-        BigDecimal durationRounded = new BigDecimal(durationInHours).setScale(4, RoundingMode.HALF_UP);
+        BigDecimal durationRounded = BigDecimal.valueOf(durationInHours).setScale(4, RoundingMode.HALF_UP);
         durationInHours = durationRounded.doubleValue();
 
         // Si la durée est inférieure ou égale à 30 minutes, le stationnement est gratuit
         if (durationInHours <= 0.5) {
-            ticket.setPrice(0.0);  // Gratuit si la durée est <= 30 minutes
+            ticket.setPrice(0.0);
             return;
         }
 
-        // Vérification supplémentaire que la durée de stationnement est bien positive
-        if (durationInHours <= 0) {
-            throw new IllegalArgumentException("Parking duration must be greater than zero.");
+        // Calcul du tarif basé sur le type de véhicule
+        BigDecimal price;
+        switch (ticket.getParkingSpot().getParkingType()) {
+            case CAR:
+                price = BigDecimal.valueOf(durationInHours).multiply(BigDecimal.valueOf(Fare.CAR_RATE_PER_HOUR))
+                        .setScale(4, RoundingMode.HALF_UP);
+                break;
+            case BIKE:
+                price = BigDecimal.valueOf(durationInHours).multiply(BigDecimal.valueOf(Fare.BIKE_RATE_PER_HOUR))
+                        .setScale(4, RoundingMode.HALF_UP);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown Parking Type");
         }
 
-        // Détermination du tarif en fonction du type de véhicule (voiture ou moto)
-        switch (ticket.getParkingSpot().getParkingType()) {
-            case CAR: {
-                // Calcul du tarif arrondi à 4 décimales
-                BigDecimal price = new BigDecimal(durationInHours * Fare.CAR_RATE_PER_HOUR).setScale(4, RoundingMode.HALF_UP);
-                ticket.setPrice(durationInHours * Fare.CAR_RATE_PER_HOUR);
-                break;
-            }
-            case BIKE: {
-                // Calcul du tarif arrondi à 4 décimales
-                BigDecimal price = new BigDecimal(durationInHours * Fare.BIKE_RATE_PER_HOUR).setScale(4, RoundingMode.HALF_UP);
-                ticket.setPrice(durationInHours * Fare.BIKE_RATE_PER_HOUR);
-                break;
-            }
-            default: {
-                throw new IllegalArgumentException("Unknown Parking Type");// Si le type de véhicule est inconnu, lever une exception
-            }
-        }
         // Application de la remise de 5% si l'utilisateur est un client régulier
         if (discount) {
-            // Calcul du tarif arrondi à 4 décimales
-            BigDecimal discountedPrice = new BigDecimal(ticket.getPrice() * DISCOUNT_RATE).setScale(4, RoundingMode.HALF_UP);
-            ticket.setPrice(ticket.getPrice() * DISCOUNT_RATE);
+            price = price.multiply(BigDecimal.valueOf(DISCOUNT_RATE)).setScale(4, RoundingMode.HALF_UP);
         }
+
+        // Affectation du prix au ticket
+        ticket.setPrice(price.doubleValue());
     }
     /**
      * Surcharge de la méthode calculateFare pour les cas où il n'y a pas de remise.

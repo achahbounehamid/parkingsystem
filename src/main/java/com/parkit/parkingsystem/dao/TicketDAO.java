@@ -62,12 +62,21 @@ public class TicketDAO {
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 ticket = new Ticket();
+//                logger.info("Ticket trouvé avec ID: " + rs.getInt("id"));
                 ticket.setId(rs.getInt("id"));
                 ticket.setVehicleRegNumber(rs.getString("vehicle_reg_number"));
                 ticket.setPrice(rs.getDouble("price"));
                 ticket.setOutTime(rs.getDate("out_time"));
                 ticket.setInTime(rs.getDate("in_time"));
+                // Créer et associer le ParkingSpot au ticket
+                ParkingSpot parkingSpot = new ParkingSpot(
+                        rs.getInt("parking_number"),
+                        ParkingType.valueOf(rs.getString("PARKING_TYPE")),
+                        rs.getBoolean("AVAILABLE")
+                );
+                ticket.setParkingSpot(parkingSpot);
             }
+
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
 

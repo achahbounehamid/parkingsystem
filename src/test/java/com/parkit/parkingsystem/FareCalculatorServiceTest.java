@@ -34,7 +34,7 @@ public class FareCalculatorServiceTest {
     public void calculateFareCar(){
         // Création d'un ticket pour une voiture stationnée pendant 1 heure
         Date inTime = new Date();
-        inTime.setTime( System.currentTimeMillis() - (  60 * 60 * 1000) );// heure de stationnement
+        inTime.setTime( System.currentTimeMillis() - ( 60 * 60 * 1000) );// heure de stationnement
         Date outTime = new Date();
         ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
 
@@ -117,7 +117,9 @@ public class FareCalculatorServiceTest {
         ticket.setInTime(inTime);
         ticket.setOutTime(outTime);
         ticket.setParkingSpot(parkingSpot);
-        assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
+//        assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
+        assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket));
+
     }
 
     @Test
