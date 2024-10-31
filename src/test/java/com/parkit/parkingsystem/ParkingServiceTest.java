@@ -145,6 +145,32 @@ public void testProcessIncomingVehicle() throws Exception {
     }
 
     @Test
+    void getVehicleType_shouldReturnBike_whenInputIs2() throws Exception {
+        // Créer des mocks pour toutes les dépendances requises par le constructeur
+        InputReaderUtil inputReaderUtil = mock(InputReaderUtil.class);
+        ParkingSpotDAO parkingSpotDAO = mock(ParkingSpotDAO.class);
+        TicketDAO ticketDAO = mock(TicketDAO.class);
+
+        // Configurer le mock InputReaderUtil pour retourner 2
+        when(inputReaderUtil.readSelection()).thenReturn(2);
+
+        // Créer une instance de ParkingService en passant les trois mocks
+        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+
+        // Accéder à la méthode privée getVehicleType via la réflexion
+        Method method = ParkingService.class.getDeclaredMethod("getVehichleType");
+        method.setAccessible(true);
+
+        // Appeler la méthode via la réflexion
+        ParkingType result = (ParkingType) method.invoke(parkingService);
+
+        // Vérifier le résultat
+        assertEquals(ParkingType.BIKE, result, "La méthode devrait retourner BIKE pour l'entrée 2");
+
+    }
+
+
+    @Test
     void processExitingVehicleTestUnableUpdate() throws Exception {
         // Créer un ticket complet avec un ParkingSpot
         Ticket ticket = new Ticket();
