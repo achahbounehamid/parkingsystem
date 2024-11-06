@@ -4,10 +4,8 @@ import com.parkit.parkingsystem.config.DataBaseConfig;
 import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
-import com.parkit.parkingsystem.model.Ticket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.*;
 
 public class ParkingSpotDAO {
@@ -37,8 +35,6 @@ public class ParkingSpotDAO {
         }
         return result;
     }
-
-
     public boolean updateParking(ParkingSpot parkingSpot){
         //update the availability fo that parking slot
         Connection con = null;
@@ -105,6 +101,4 @@ public class ParkingSpotDAO {
         }
         return parkingSpot;
     }
-
-
 }

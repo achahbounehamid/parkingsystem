@@ -113,15 +113,11 @@ public void testProcessIncomingVehicle() throws Exception {
       calendarPlus.add(Calendar.DAY_OF_MONTH, +1); // ajouter un jour
       ticket.setOutTime(calendarPlus.getTime());
 
-
       FareCalculatorService fareCalculatorService = new FareCalculatorService();
       fareCalculatorService.calculateFare(ticket, true);
 
-
        when(ticketDAO.getTicket(any())).thenReturn(ticket);
-
        when(ticketDAO.getNbTicket(any())).thenReturn(5);
-
       when(ticketDAO.updateTicket(any())).thenReturn(true);
       when(parkingSpotDAO.updateParking(any())).thenReturn(true);
 
@@ -132,8 +128,6 @@ public void testProcessIncomingVehicle() throws Exception {
       verify(ticketDAO, times(1)).getNbTicket(any());
 
   }
-
-
     @Test
     void getNextParkingNumberIfAvailableTest() throws Exception {
 
@@ -150,26 +144,18 @@ public void testProcessIncomingVehicle() throws Exception {
         InputReaderUtil inputReaderUtil = mock(InputReaderUtil.class);
         ParkingSpotDAO parkingSpotDAO = mock(ParkingSpotDAO.class);
         TicketDAO ticketDAO = mock(TicketDAO.class);
-
         // Configurer le mock InputReaderUtil pour retourner 2
         when(inputReaderUtil.readSelection()).thenReturn(2);
-
         // Créer une instance de ParkingService en passant les trois mocks
         ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-
         // Accéder à la méthode privée getVehicleType via la réflexion
         Method method = ParkingService.class.getDeclaredMethod("getVehichleType");
         method.setAccessible(true);
-
         // Appeler la méthode via la réflexion
         ParkingType result = (ParkingType) method.invoke(parkingService);
-
         // Vérifier le résultat
         assertEquals(ParkingType.BIKE, result, "La méthode devrait retourner BIKE pour l'entrée 2");
-
     }
-
-
     @Test
     void processExitingVehicleTestUnableUpdate() throws Exception {
         // Créer un ticket complet avec un ParkingSpot
@@ -178,28 +164,22 @@ public void testProcessIncomingVehicle() throws Exception {
         ticket.setParkingSpot(parkingSpot);
         ticket.setVehicleRegNumber("ABC123");
         ticket.setInTime(new Date(System.currentTimeMillis() - (60 * 60 * 1000))); // il y a 1 heure
-
         // Simuler les appels nécessaires
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABC123");
         when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
-
         // Simuler le cas où updateTicket() renvoie false
         when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(false);
-
         // Appeler la méthode à tester
         parkingService.processExitingVehicle();
-
         // Vérifier que updateTicket() a bien été appelé
         verify(ticketDAO, times(1)).updateTicket(any(Ticket.class));
     }
-
 @Test
     void testGetNextParkingNumberIfAvailable() throws Exception{
     //Simuler le type de véhicule (ici, une voiture)
     when(inputReaderUtil.readSelection()).thenReturn(1);
 //Simuler que la méthode parkingSpotDAO.getNextAvailableSlot() renvoie 1, ce qui correspond à l'emplacement de parking disponible avec l'ID 1.
     when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
-
 // Appel de la méthode à tester
     ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
     // Vérifications des résultats
@@ -207,14 +187,11 @@ public void testProcessIncomingVehicle() throws Exception {
     assertEquals(1, parkingSpot.getId()); // Vérifier que l'ID est bien 1
     assertEquals(ParkingType.CAR, parkingSpot.getParkingType()); // Vérifier le type de parking (voiture)
     assertTrue(parkingSpot.isAvailable()); // Vérifier que l'emplacement est disponible
-
 }
     @Test
     void testGetNextParkingNumberIfAvailableParkingNumberNotFound() throws Exception {
         assertNull(parkingService.getNextParkingNumberIfAvailable());
     }
-
-
 }
 
 

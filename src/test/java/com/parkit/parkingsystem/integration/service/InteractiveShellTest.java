@@ -2,25 +2,17 @@ package com.parkit.parkingsystem.integration.service;
 
 import com.parkit.parkingsystem.dao.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.TicketDAO;
-import com.parkit.parkingsystem.service.InteractiveShell;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Scanner;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 
 @ExtendWith(MockitoExtension.class)
 public class InteractiveShellTest {
@@ -49,8 +41,6 @@ public class InteractiveShellTest {
         System.setIn(originalSystemIn);
     }
 
-
-
     @Test
     void testReadSelectionReturnsValidInput() {
         // Simuler une entrée utilisateur valide
@@ -64,18 +54,5 @@ public class InteractiveShellTest {
         // Vérifier que le résultat est correct
         System.out.println("ok");
     }
-
-//    @Test
-//    void interactiveShellTest() {
-//        // Simuler la sélection
-//        Mockito.when(inputReaderUtil.readSelection()).thenReturn(1);
-//
-//        // Appeler la méthode qui devrait utiliser le mock
-//        InteractiveShell.loadInterface();
-//
-//        // Vérifier que la méthode a été appelée
-//        verify(parkingService, times(1)).processIncomingVehicle();
-//    }
-
 
 }
